@@ -76,6 +76,7 @@ function getFieldName(input) {
 
 // Check email is valid
 function checkbrandweertoegangInput(input) {
+  console.log(input);
   const re = /^([1-1000])$/;
   if (re.test(input.value.trim())) {
     showSuccess(input);
@@ -87,6 +88,7 @@ function checkbrandweertoegangInput(input) {
 // Check email is valid
 function checkdiepsteInput(input) {
   const re = /^([1-5000])$/;
+  console.log(input);
 
   if (re.test(input)) {
     showSuccess(input);
