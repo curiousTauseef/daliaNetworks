@@ -45,7 +45,7 @@ function checkdiepsteInput(input) {
 
 // Event listeners
 form.addEventListener('submit', function(e) {
-  e.preventDefault();
+  //e.preventDefault();
 
   //checkRequired([username, email, password, password2]);
   //checkLength(username, 3, 15);
