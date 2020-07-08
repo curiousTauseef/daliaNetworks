@@ -4,6 +4,20 @@ const email = document.getElementById('email');
 const password = document.getElementById('password');
 const password2 = document.getElementById('password2');
 
+const diepsteinput = document.getElementById('diepste');
+
+// Check diepste entry within a number range
+function checkdiepsteInput(input) {
+  const re = /^([1-5000])$/;
+  console.log(input);
+
+  if (re.test(input)) {
+    showSuccess(input);
+  } else {
+    showError(input, 'Entered input not valid. Please enter a number between 1 and 5000');
+  }
+}
+
 // Show input error message
 function showError(input, message) {
   const formControl = input.parentElement;
@@ -76,5 +90,6 @@ form.addEventListener('submit', function(e) {
   checkLength(username, 3, 15);
   checkLength(password, 6, 25);
   checkEmail(email);
+  checkdiepsteInput(diepsteinput);
   checkPasswordsMatch(password, password2);
 });
