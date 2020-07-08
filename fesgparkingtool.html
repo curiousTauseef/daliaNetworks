@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>FESG wep app</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/jsxgraph.css" />
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/fesgstyle.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+    <style>
+        #box_licenseText { display: none; }
+        #box_navigationbar { display: none; }
+        #box2_licenseText { display: none; }
+        #box2_navigationbar { display: none; }
+
+        /*body { background-color: #7386D5 }*/
+
+        .wrapper {
+            max-width: 1450px;
+            /*margin: 0 auto;*/
+        }
+        /*#content { background-color: #fff; }*/
+        .help-tip {
+            background-color: #BCDBEA;
+            border-radius: 50%;
+            color: #fff;
+            font-weight: 600;
+            width: 24px;
+            height: 24px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 26px;
+            border: none;
+            display: inline-block;
+            margin-left:10px;
+        }
+        .help-tip:focus {
+            outline: none;
+        }
+        .freq-margin-fix {
+            margin-left:10px;
+        }
+        .jxgbox {
+            border-radius: 0.25rem;
+            webkit-border-radius: 0.25rem;
+            border-color: #000;
+        }
+        .margin-right-auto {
+            margin-right: auto !important;
+        }
+        .main-small {
+            display:none;
+        }
+        @media (max-width: 1000px) {
+            .main-small {
+                display: block;
+            }
+            #main { display:none; }
+        }
+        @media (min-width: 576px) {
+            .form-inline .form-control {
+                display: inline-block;
+                width: 100%;
+            }
+            .form-inline label {
+                justify-content: left;
+            }
+            .col-md-p12 {
+                padding: 0 15px;
+                max-width: 20.5%;
+            }
+            .col-md-p13 {
+                padding: 0 5px;
+                max-width: 12.5%;
+            }
+            .modal-dialog {
+                max-width: 1550px;
+            }
+            #modal-dialog-devices {
+                max-width: 978px;
+            }
+            #modal-dialog-files, #modal-dialog-results {
+                max-width: 500px;
+            }
+
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>FESG Calc</h3>
+            </div>
+            <ul class="list-unstyled components">
+                <p>Options</p>
+                <li><a id="layout-files" href="#">Layout files</a></li>
+                <li><a id="edit-defaults" href="#">Edit defaults</a></li>
+                <li><a id="edit-devices" href="#">Edit devices</a></li>
+                <li><a id="results" href="#">Results</a></li>
+                <li><a id="help" href="#">Help</a></li>
+            </ul>
+            <ul class="list-unstyled CTAs">
+                <li><a href="#" class="download">Save</a></li>
+                <li><a href="#" class="article">Open</a></li>
+            </ul>
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content" class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <span style="padding-left:10px;">FESG logo</span>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a id="introduction" class="nav-link" href="#">Introduction</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a id="Kilimanjaro" class="nav-link" href="#">Kilimanjaro</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="login" class="nav-link" href="#">Login</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div id="intro-div"></div>
+            <div class="main-small">This app currently only works for devices where width > 1000 px.</div>
+            <div id="main">
+                <form class="form-horizontal" id="calc-form">
+                    <!-- <input type="hidden" name="_token" value="{{ csrf_token }}"> -->
+                    <!-- TODO: Fix django token -->
+                    <h2>Inputs</h2>
+
+                    <div class="input-group form-inline mt-2">
+                        <label class="control-label col-md-3">Provincie</label>
+                        <div class="col-md-4">
+                            <select class="form-control" id="provincie_lijst" name="provincie_lijst">
+                                <option value="base"> Selecteer een provincie</option>
+                                <optgroup label="Vlaanderen">
+                                    <option value="antwerpen">Antwerpen</option>
+                                    <option value="limburg">Limburg</option>
+                                    <option value="oostvlaanderen">Oost-Vlaanderen</option>
+                                    <option value="vlaamsbrabant">Vlaams-Brabant</option>
+                                    <option value="westvlaanderen">West-Vlaanderen</option>
+                                </optgroup>
+                                <optgroup label="Wallonië"> 
+                                    <option value="henegouwen">Henegouwen</option>                             
+                                    <option value="luik">Luik</option>
+                                    <option value="luxemburg"> Luxemburg</option>
+                                    <option value="waalsbrabant">Waals-Brabant</option>
+                                    <option value="namen">Namen</option>
+                                </optgroup>   
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="input-group form-inline mt-2">
+                        <label class="control-label col-md-3">Brandweerzone</label>
+                        <div class="col-md-4">
+                            <select class="form-control" id="brandweerzone" name="brandweerzone">
+                                <option value="empty">-</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="gebouwenBovenParking" class="input-group form-inline mt-2">
+                        <label class="control-label col-md-3">Gebouwen boven parking</label>
+                        <div class="col-md-3">
+                            <select class="form-control" id="buildingsAboveParking" name="buildingsAboveParking">
+                                <option value="noBuildings" selected="">Nee</option>
+                                <option value="buildings">Ja</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="typeGebouw" style="display:none" class="input-group form-inline mt-2">
+                        <label class="control-label col-md-3">Hoogte gebouw
+                            <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="hover focus" data-toggle="popover" data-placement="top" data-content="Geef het type van het hoogste gebouw boven de parking in.">?</div>    
+                        </label>
+                        <div class="col-md-3">
+                            <select class="form-control" id="typeOfBuilding" name="typeOfBuilding">
+                                <option value="laag">Laagbouw   (<10m)</option>
+                                <option value="mid">Middelhoog   (10m - 25m)</option>
+                                <option value="hoog">Hoogbouw   (>25m)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-group form-inline mt-2">
+                        <label class="control-label col-md-3">Diepste punt
+                            <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="hover focus" data-toggle="popover" data-placement="top" data-content="Display fig of WTCB or BVV">?</div>    
+                        </label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="diepstepunt" name="diepstepunt" placeholder="diepste punt (m)">                                
+                        </div>
+                    </div>
+
+
+                    <div class="input-group form-inline mt-2">
+                        <label class="control-label col-md-3">Niveau brandweertoegang 
+                            <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="hover focus" data-toggle="popover" data-placement="top" data-content="Display fig of WTCB or BVV">?</div>    
+                        </label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="brandweertoegang" name="brandweertoegang" placeholder="niveau (m)">                                
+                        </div>
+                    </div>
+
+                    <!-- from here area inputs -->
+
+                    <div class="input-group form-inline mt-2">
+                        <label class="control-label col-md-3"># lagen ondergronds</label>
+                        <div class="col-md-3">
+                            <select class="form-control" id="number_layersug" name="number_layersug">
+                                <option value="1" selected="">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                        <label class="control-label col-md-3"># lagen bovengronds</label>   
+                        <div class="col-md-3">
+                            <select class="form-control" id="number_layersag" name="number_layersag">
+                                <option value="1" selected="">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-group form-inline mt-2">
+                        <label id="labelug1" class="control-label col-md-3">niveau -1</label>
+                        <div id="ug1" class="col-md-3">
+                            <input type="text" class="form-control" id='og1' name="og1" placeholder="oppervlakte [m^2]">
+                        </div>
+                        <label id="labelag1" class="control-label col-md-3">niveau +1</label>
+                        <div id="ag1" class="col-md-3">
+                            <input type="text" class="form-control" id="bg1" name="bg1" placeholder="oppervlakte [m^2]">
+                        </div>
+                    </div>
+
+                    <div class="input-group form-inline mt-2">
+                        <label id="labelug2" class="control-label col-md-3">niveau -2</label>
+                        <div id="ug2" class="col-md-3">
+                            <input type="text" class="form-control" id='og2' name="og2" placeholder="oppervlakte [m^2]">
+                        </div>
+                        <label id="labelag2" class="control-label col-md-3">niveau +2</label>
+                        <div id="ag2" class="col-md-3">
+                            <input type="text" class="form-control" id="bg2" name="bg2" placeholder="oppervlakte [m^2]">
+                        </div>
+                    </div>
+
+                    <div class="input-group form-inline mt-2">
+                        <label id="labelug3" class="control-label col-md-3">niveau -3</label>
+                        <div id="ug3" class="col-md-3">
+                            <input type="text" class="form-control" id="og3" name="og3" placeholder="oppervlakte [m^2]">
+                        </div>
+                        <label id="labelag3" class="control-label col-md-3">niveau +3</label>
+                        <div id="ag3" class="col-md-3">
+                            <input type="text" class="form-control" id="bg3" name="ag3" placeholder="oppervlakte [m^2]">
+                        </div>
+                    </div>
+
+                    <div class="input-group form-inline mt-4">
+                        <label class="control-label col-md-3">Car types present</label>
+                        <div class="col-md-p12 btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-secondary"">
+                            <input type="checkbox" autocomplete="off"> Diesel/Benzine
+                            </label>                               
+                        </div>
+                        <div class="col-md-p12 btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-secondary"">
+                            <input type="checkbox" autocomplete="off"> Elektrisch
+                            </label>                               
+                        </div>
+                        <div class="col-md-p12 btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-secondary"">
+                            <input type="checkbox" autocomplete="off"> CNG
+                            </label>                               
+                        </div>
+                        <div class="col-md-p12 btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-secondary"">
+                            <input type="checkbox" autocomplete="off"> LPG
+                            </label>                               
+                        </div>
+                        <div class="col-md-p12 btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-secondary"">
+                            <input type="checkbox" autocomplete="off"> Elektrisch
+                            </label>                               
+                        </div>
+                    </div>
+
+                    <h2 class="mt-5">Options</h2>
+
+                    <div class="text-center mt-5">
+                        <button id="submit" type="submit" class="btn btn-primary">Show options</button>
+                    </div>
+
+                    <div id="submit-success" class="alert alert-success mt-3" style="display:none;">Thank you. Your inputs have been submitted. Results will be sent to you by e-mail.</div>
+                </form>
+            </div>  
+        </div>
+    </div>
+
+    <!-- EDIT DEFAULTS MODAL -->
+    <div class="modal fade" data-keyboard="true" data-backdrop="static" id="defaults-modal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit defaults</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div id="defaults-modal-body" class="modal-body">
+                    <h4>Fire Spread</h4>
+                    <div class="row mb-5">
+                        <div class="col-xl-6">
+                            <h5>General Input Data</h5>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-5">Ambient Temperature</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="ambient_temperature" name="ambient_temperature" placeholder="&#8451;">                                
+                                </div>
+                                <small id="ambient_temperature_valid" class="col-md-6 offset-md-5 text-danger"></small>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-5">Number of Simulations
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                    data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="nr_sims" name="nr_sims">
+                                </div>
+                                <small id="nr_sims_valid" class="col-md-6 offset-md-5 text-danger"></small>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-5">Allowed Back Layering</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="back_layering" name="back_layering" placeholder="(m)">                                
+                                </div>
+                                <small id="back_layering_valid" class="col-md-6 offset-md-5 text-danger"></small>
+                            </div>
+
+                        </div>
+                        <div class="col-xl-6">
+                            <h5>Ignition Frequency Input Data</h5>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-4">Data Type</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" id="data_type" name="data_type"> 
+                                        <option value="total_freq">Total Frequency</option>
+                                        <option value="freq_by_car">Frequency by car</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-4">Total Frequency</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="total_frequency" name="total_frequency">                                
+                                </div>
+                                <small id="total_frequency_valid" class="col-md-6 offset-md-5 text-danger"></small>
+                            </div>
+                            <div class="input-group form-inline mt-2 freq_by_car">
+                                <label class="control-label col-md-4">Frequency by car
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                    data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-p13 freq-margin-fix">
+                                    <input type="text" class="form-control" id="frequency_car_diesel" name="frequency_car_diesel" disabled> 
+                                </div>
+                                <div class="col-md-p13">
+                                    <input type="text" class="form-control" id="frequency_car_petrol" name="frequency_car_petrol" disabled>
+                                </div>
+                                <div class="col-md-p13">
+                                    <input type="text" class="form-control" id="frequency_car_cng_lng" name="frequency_car_cng_lng" disabled>
+                                </div>
+                                <div class="col-md-p13">
+                                    <input type="text" class="form-control" id="frequency_car_lpg" name="frequency_car_lpg" disabled>
+                                </div>
+                                <div class="col-md-p13">
+                                    <input type="text" class="form-control" id="frequency_car_electric" name="frequency_car_electric" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-5 offset-md-4">
+                                <small id="frequency_car_diesel_valid" class="text-danger">&nbsp;</small>
+                                <small id="frequency_car_petrol_valid" class="text-danger"></small>
+                                <small id="frequency_car_cng_lng_valid" class="text-danger"></small>
+                                <small id="frequency_car_lpg_valid" class="text-danger"></small>
+                                <small id="frequency_car_electric_valid" class="text-danger"></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Intervention Time</h4>
+                    <div class="row mb-5">
+                        <div class="col-xl-6">
+                            <div class="row mt-2">
+                                <div class="col-md-3 offset-md-5 pl-4" style="align-self:flex-end">Mean</div>
+                                <div class="col-md-3" style="align-self:flex-end">Std Deviation</div>
+                                <!-- <div class="col-md-2" style="align-self:flex-end">Graph</div> -->
+                            </div>
+
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-5">Manual Call</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="itm1" name="manual_call_mean">
+                                    <small id="itm1_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="its1" name="manual_call_std">
+                                    <small id="its1_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                    <button id="it1" class="btn btn-primary"><i class="fas fa-chart-bar"></i></button>
+                                </div>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-5">Automatic Call</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="itm2" name="automatic_call_mean">
+                                    <small id="itm2_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="its2" name="automatic_call_std">
+                                    <small id="its2_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                    <button id="it2" class="btn btn-primary"><i class="fas fa-chart-bar"></i></button>
+                                </div>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-5">Permanent Fire Fighter reaction</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="itm3" name="perm_fighter_mean">
+                                    <small id="itm3_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="its3" name="perm_fighter_std">
+                                    <small id="its3_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                    <button id="it3" class="btn btn-primary"><i class="fas fa-chart-bar"></i></button>
+                                </div>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-5">Volunteer Fire Fighter reaction</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="itm4" name="vol_fighter_mean">
+                                    <small id="itm4_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="its4" name="vol_fighter_std">
+                                    <small id="its4_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                    <button id="it4" class="btn btn-primary"><i class="fas fa-chart-bar"></i></button>
+                                </div>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-5">Travel Time Coefficients</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="itm5" name="travel_time_mean">
+                                    <small id="itm5_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="its5" name="travel_time_std">
+                                    <small id="its5_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                    <button id="it5" class="btn btn-primary"><i class="fas fa-chart-bar"></i></button>
+                                </div>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-5">Attack time</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="itm6" name="attack_time_mean">
+                                    <small id="itm6_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="its6" name="attack_time_std">
+                                    <small id="its6_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                    <button id="it6" class="btn btn-primary"><i class="fas fa-chart-bar"></i></button>
+                                </div>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-5">Distance to Parking</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="dist_parking" name="dist_parking">
+                                    <small id="dist_parking_valid" class="text-danger"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <h5>Showing graph for <span id="graph_title">Manual Call</span></h5>
+                            <div id="box" class="jxgbox" style="width:300px; height:300px;"></div>
+                        </div>
+                    </div>
+                    <h5>Safety Measure Walking Speeds</h5>
+                    <!-- <h6>Sprinkler System</h6> -->
+                    <div class="row mb-5">
+                        <div class="col-md-6">
+                            <div class="row mt-2">
+                                <div class="col-md-3 offset-md-5 pl-4" style="align-self:flex-end">Thermo Cam Off</div>
+                                <div class="col-md-3" style="align-self:flex-end">Thermo Cam On</div>
+                            </div>
+
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-5">Sprinkler System W.S.
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                             data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="sprinkler_walking_cam_off" name="sprinkler_walking_cam_off">
+                                    <small id="sprinkler_walking_cam_off_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="sprinkler_walking_cam_on" name="sprinkler_walking_cam_on">
+                                    <small id="sprinkler_walking_cam_on_valid" class="text-danger"></small>
+                                </div>
+                            </div>
+
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-5">HVAC System W.S. 1
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                             data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="hvac_walking_cam_off" name="hvac_walking_cam_off">
+                                    <small id="hvac_walking_cam_off_valid" class="text-danger"></small>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="hvac_walking_cam_on" name="hvac_walking_cam_on">
+                                    <small id="hvac_walking_cam_on_valid" class="text-danger"></small>
+                                </div>
+                            </div>
+                            <div class="input-group form-inline mt-4">
+                                <label class="control-label col-md-5">HVAC System W.S. 2
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                             data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="hvac_walking_dist" name="hvac_walking_dist">
+                                    <small id="hvac_walking_dist_valid" class="text-danger"></small>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>    
+                </div>
+                <div class="modal-footer">
+                    <button id="reset-defaults" type="button" class="btn btn-secondary margin-right-auto">Reset defaults</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button id="save-edit-button" class="btn btn-primary"role="button">Save</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- EDIT DEVICES MODAL -->
+    <div class="modal fade" data-keyboard="true" data-backdrop="static" id="devices-modal" role="dialog">
+        <div id="modal-dialog-devices" class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit devices</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div id="devices-modal-body" class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-6 mb-5">
+                            <h4>Sprinkler</h4>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-8">RTI
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                            data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="sprinkler_rti" name="sprinkler_rti">
+                                </div>
+                                <small id="sprinkler_rti_valid" class="col-md-6 text-danger"></small>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-8">Activation Temperature (&#8451;)
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                            data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="sprinkler_activation_temperature" name="sprinkler_activation_temperature">
+                                </div>
+                                <small id="sprinkler_activation_temperature_valid" class="col-md-6 text-danger"></small>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-8">Coverage Area (m<sup>2</sup>)
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                            data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="sprinkler_coverage_area" name="sprinkler_coverage_area">
+                                </div>
+                                <small id="sprinkler_coverage_area_valid" class="col-md-6 text-danger"></small>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 mb-5">
+                            <h4>Smoke Detector</h4>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-8">RTI
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                            data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="smoke_rti" name="smoke_rti">
+                                </div>
+                                <small id="smoke_rti_valid" class="col-md-6 text-danger"></small>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-8">Activation Threshold
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                            data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="smoke_activation_threshold" name="smoke_activation_threshold">
+                                </div>
+                                <small id="smoke_activation_threshold_valid" class="col-md-6 text-danger"></small>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-8">Coverage Area (m<sup>2</sup>)
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                            data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="smoke_coverage_area" name="smoke_coverage_area">
+                                </div>
+                                <small id="smoke_coverage_area_valid" class="col-md-6 text-danger"></small>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 mb-5">
+                            <h4>RWA</h4>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-8">Failure Temperature (&#8451;)
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                            data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="rwa_failure_temperature" name="rwa_failure_temperature">
+                                </div>
+                                <small id="rwa_failure_temperature_valid" class="col-md-6 text-danger"></small>
+                            </div>
+                            <div class="input-group form-inline mt-2">
+                                <label class="control-label col-md-8">Critical Velocity
+                                    <div class="help-tip" tabindex="0" role="button" href="javascript:void(0);" data-trigger="focus" data-toggle="popover" data-placement="top"                            data-content="Upload a car file by using Layout files in the menu.">?</div>
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="rwa_critical_velocity" name="rwa_critical_velocity">
+                                </div>
+                                <small id="rwa_critical_velocity_valid" class="col-md-6 text-danger"></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    
+                <div class="modal-footer">
+                    <button id="reset-devices" type="button" class="btn btn-secondary margin-right-auto">Reset devices</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button id="save-edit-devices-button" class="btn btn-primary"role="button">Save</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- LAYOUT FILES MODAL -->
+    <div class="modal fade" data-keyboard="true" data-backdrop="static" id="files-modal" role="dialog">
+        <div id="modal-dialog-files" class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Layout Files</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div id="files-modal-body" class="modal-body">
+                    <form method="post" action="" enctype="multipart/form-data" id="myform">
+                        <div>
+                            <label for="upload_car_file">Car File</label>
+                            <input type="file" class="form-control-file mb-3" id="upload_car_file" name="car_file"/>
+                            <label for="wall_file">Wall File</label>
+                            <input type="file" class="form-control-file mb-3" id="upload_wall_file" name="wall_file"/>
+                        </div>
+                    </form> 
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-primary" id="btn_upload">Upload files</button>
+                    </div>
+                    <div class="mt-3 w-100 text-center">
+                        <small id="upload-error" class="text-danger"></small>
+                    </div>
+                    <div class="mt-4" style="display:none;">
+                        <p>List of uploaded files</p>
+                    </div>
+                </div>
+                    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- RESULTS MODAL -->
+    <div class="modal fade" data-keyboard="true" data-backdrop="static" id="results-modal" role="dialog">
+        <div id="modal-dialog-results" class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Results</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div id="files-modal-body" class="modal-body">
+                    <div class="mt-4">
+                        <p>There are currently no results to show.</p>
+                    </div>
+                </div>
+                    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script  src="js/fesgmain.js"></script>
+    
+    <script type="text/javascript" src="js/jsxgraphcore.js"></script>
+</body>
+
+</html>
