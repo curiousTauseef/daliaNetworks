@@ -8,7 +8,8 @@ const diepsteinput = document.getElementById('diepste');
 
 // Check diepste entry within a number range
 function checkdiepsteInput(input) {
-  const re = /^([1-5000])$/;
+  //const re = /^([1-5000])$/;
+  const re = /^([1-9][0-9]{0,2}|1000)$/;
   console.log(input);
 
   if (re.test(input)) {
