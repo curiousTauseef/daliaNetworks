@@ -1,0 +1,58 @@
+<!doctype html>
+    <html lang="en">
+    <head>
+     <script type="text/javaScript">
+     function validate_dropdown1(){
+      var dropdown = document.getElementById('gender');
+     var dropdown1 = document.getElementById('race');
+     var gen=document.getElementById("gen");
+      var ra=document.getElementById("ra")
+        if(dropdown.selectedIndex==0){
+         gen.innerHTML="Select gender";
+           dropdown.focus();
+            return false; 
+            }
+            else if(dropdown.selectedIndex!=0 && dropdown1.selectedIndex==0){
+            ra.innerHTML="Select race";
+            dropdown1.focus();
+            gen.innerHTML="";
+             return false;
+             }
+             else
+             {
+                gen.innerHTML="";
+                ra.innerHTML="";
+             }
+
+              }
+
+    </script>
+    </head>
+    <body>
+    <table>
+    <tr>
+     <td align="right">Gender</td> 
+           <td><select name="gender" class="normal_lb_border" id="gender"onchange="validate_dropdown1()">
+           <option value="0" selected>Select gender</option>
+              <option value="1">Male</option>
+              <option value="2">Female</option>
+              </select> 
+
+           <label id="gen" style="color: red; font-style: italic;"></label>
+              <br><br>
+             </td> 
+            <td align="right">Race</td> 
+             <td><select name="gender" class="normal_lb_border" id="race" onchange="validate_dropdown1()">
+           <option value="0" selected>Select race</option>
+              <option value="1">Islam</option>
+              <option value="2">Buddha</option>
+              </select> 
+           <label id="ra" style="color: red; font-style: italic;"></label>
+              <br><br>
+             </td> 
+    </tr>
+    </table>
+
+    </form>
+    </body>
+    </html>
