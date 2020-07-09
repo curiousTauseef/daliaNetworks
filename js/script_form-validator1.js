@@ -8,14 +8,16 @@ const diepsteinput = document.getElementById('diepste');
 
 // Check diepste entry within a number range
 function checkdiepsteInput(input) {
+  //var inputVal = document.getElementById("myInput").value;
+  var inputVal = input.value.trim();
   //const re = /^([1-5000])$/;
   const re = /^([1-9][0-9]{0,2}|1000)$/;
   //console.log(input);
 
-  if (re.test(input)) {
+  if (re.test(inputVal)) {
     showSuccess(input);
   } else {
-    console.log(input);
+    console.log(inputVal);
     showError(input, 'Entered input not valid. Please enter a number between 1 and 5000');
   }
 }
