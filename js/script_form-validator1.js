@@ -10,11 +10,12 @@ const diepsteinput = document.getElementById('diepste');
 function checkdiepsteInput(input) {
   //const re = /^([1-5000])$/;
   const re = /^([1-9][0-9]{0,2}|1000)$/;
-  console.log(input);
+  //console.log(input);
 
   if (re.test(input)) {
     showSuccess(input);
   } else {
+    console.log(input);
     showError(input, 'Entered input not valid. Please enter a number between 1 and 5000');
   }
 }
