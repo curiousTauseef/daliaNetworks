@@ -21,7 +21,8 @@ function showSuccess(input) {
 
 // Check email is valid
 function checkbrandweertoegangInput(input) {
-  console.log(input);
+  //console.log(input);
+  console.log( input.value.trim());
   const re = /^([1-1000])$/;
   if (re.test(input.value.trim())) {
     showSuccess(input);
@@ -33,9 +34,10 @@ function checkbrandweertoegangInput(input) {
 // Check email is valid
 function checkdiepsteInput(input) {
   const re = /^([1-5000])$/;
-  console.log(input);
+ 
+  console.log( input.value.trim());
 
-  if (re.test(input)) {
+  if (re.test(input.value.trim())) {
     showSuccess(input);
   } else {
     showError(input, 'Entered input not valid. Please enter a number between 1 and 5000');
