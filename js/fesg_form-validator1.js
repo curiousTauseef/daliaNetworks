@@ -47,6 +47,7 @@ function checkdiepsteInput(input) {
 
 // Event listeners
 form.addEventListener('submit', function(e) {
+  console.log("testfesg:submit button");
   e.preventDefault();
 
   //checkRequired([username, email, password, password2]);
