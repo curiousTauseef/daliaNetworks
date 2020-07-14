@@ -88,6 +88,7 @@ function getFieldName(input) {
 
 // Event listeners
 form.addEventListener('submit', function(e) {
+  console.log("test:submit button");
   e.preventDefault();
 
   checkRequired([username, email, password, password2]);
